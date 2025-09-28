@@ -183,7 +183,7 @@ local dialog = Library:CreateChangelogDialog({
     },
     Notification = {
         Title = "Changelog",
-        Content = "The changelog has been closed",
+        Content = "The Supported Games has been closed",
         Duration = 3,
         Image = 10723346871
     },
