@@ -1,7 +1,8 @@
 -- hi this is my library if you want to use it check it out here: https://github.com/EnesXVC/librarys/blob/main/SearchAndChangeLogLibrary/Documentation.md
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesXVC/librarys/main/SearchAndChangeLogLibrary/Source"))()
 local dialog = Library:CreateChangelogDialog({
-    Title = "My Changelog",
+    Title = "Supported Games - 170",
     ChangelogText = [[
 1. 3008
 2. 100 players Maze
