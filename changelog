@@ -1,0 +1,33 @@
+-- hi this is my library if you want to use it check it out here: https://github.com/EnesXVC/librarys/blob/main/SearchAndChangeLogLibrary/Documentation.md
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesXVC/librarys/main/SearchAndChangeLogLibrary/Source"))()
+local dialog = Library:CreateChangelogDialog({
+    Title = "My Changelog",
+    ChangelogText = "Version: 5.8\n+ added more universal scripts\n+ fixed scripts detections some games\n+ fixed scripts lagging the game\n[+] Added Games\n1. Emergency Hamburg\n2. Don't Wake the Brainrots!\n3. Restaurant Tycoon 2\n4. Restaurant Tycoon 3\n5. Break your Bones\n6. Plants Vs Brainrots\n7. Fish It!\n8. Be a Beggar\n9. Cut Trees\n10. Build Ur Base\n11. Repair a Car\n[+] Updated Games Scripts\n1. GEF\n2. Ultimate Mining Tycoon\n3. +1 Speed Prison Escape\n- i forgot\n[+] Added Features\n- Camera Settings: Blur & Resolution\nEnable/Disable performance loop for more fps\n[-] Deleted Features\nnothing",
+    Search = true,
+    NotifyLibrary = "Rayfield",
+    Notifications = true,
+    Altbutton = {
+        Name = "Join Discord",
+        Clipboard = "discord.gg/rTw5M8dRXN"
+    },
+    Notification = {
+        Title = "Changelog",
+        Content = "The changelog has been closed",
+        Duration = 3,
+        Image = 10723346871
+    },
+    AltbuttonNotification = {
+        Success = {
+            Title = "Copied!",
+            Content = "Link copied to clipboard",
+            Duration = 5,
+            Image = 10709798443
+        },
+        Failure = {
+            Title = "Error",
+            Content = "Clipboard not supported",
+            Duration = 5,
+            Image = 10709799124
+        }
+    }
+})
