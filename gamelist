@@ -1,0 +1,204 @@
+-- hi this is my library if you want to use it check it out here: https://github.com/EnesXVC/librarys/blob/main/SearchAndChangeLogLibrary/Documentation.md
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesXVC/librarys/main/SearchAndChangeLogLibrary/Source"))()
+local dialog = Library:CreateChangelogDialog({
+    Title = "My Changelog",
+    ChangelogText = [[
+1. 3008
+2. 100 players Maze
+3. 100 Player Slippery Stairs
+4. 99 Nights in the Forest
+5. +1 Speed Prison Escape
+6. 24 Hours in Elevator
+7. +1 Speed Maze
+8. Arsenal
+9. A dusty trip
+10. Arise Crossover
+11. Anime Card Master
+12. Asylum Life
+13. Brookhaven RP
+14. Blade Ball
+15. Break In
+16. Break In 2
+17. Blox Fruits
+18. Blue Lock: Rivals
+19. Brainrot IQ Test
+20. Build A Plane
+21. BedWars
+22. Break your Bones
+23. Basketball Legends
+24. Breeding ranch
+25. Bridge Duel
+26. Brainrot Evolution
+27. BIG Paintball 2
+28. Baddies
+29. Be a Beggar
+30. Be NPC Or Die
+31. Build A Boat For Treasure
+32. Bubble Gum Simulator INFINITY
+33. BARRY'S PRISON RUN
+34. Bee Rich
+35. Babu's Wall Hop Difficulty Chart 2
+36. Become a Plane and Fly
+37. Broken Bones IV - Ragdoll Sim
+38. Build An Island
+39. Build Ur Base
+40. Blood Debt
+41. Criminality
+42. Combat Warriors
+43. Counter Blox
+44. Chaos
+45. Cut Trees
+46. Color Game
+47. Climb and Jump Tower
+48. Dead Rails
+49. DIG
+50. Don't Wake the Brainrots!
+51. Dead Rivers
+52. Death Penalty
+53. Driving Empire
+54. DOORS
+55. Dress To Impress
+56. Da Hood
+57. Dig to Earth's CORE
+58. Dig the Backyard
+59. Desert Detectors
+60. Drill Digging Simulator
+61. Evade
+62. Emergency Hamburg
+63. Eat Pizza to Grow GIGACHAD
+64. Elemental Powers Tycoon
+65. Fisch
+66. Fish It!
+67. Forsaken
+68. Fling Things and People
+69. Flag Wars
+70. Fish Training
+71. Funky Friday
+72. Field Trip Z
+73. Flee the Facility
+74. GEF
+75. Grow Crystals
+76. Grow a Garden
+77. Gunfight Arena
+78. Gun Grounds FFA
+79. Gang up on people simulator
+80. Guess the Drawings
+81. Gym Track Race
+82. GO FISHING
+83. HyperShot
+84. Hunty Zombie
+85. Horse Race
+86. Horrific Housing
+87. Ink Game
+88. IQ Test
+89. Insane Elevator Testing
+90. Ice Tycoon
+91. Jail Break
+92. Jetpack Training
+93. KAT
+94. KAT X
+95. Lumber Tycoon 2
+96. Level Below
+97. Legends Of Speed
+98. Lootify
+99. LUCKY BLOCKS Battlegrounds
+100. Murder Mystery 2
+101. Muscle Legends
+102. Merge Tower Defense
+103. Meme Sea
+104. MIC UP
+105. Murderers VS Sheriffs Duels
+106. Math Murder
+107. Merge for SPEED
+108. Musical Chairs
+109. My Singing Brainrot
+110. Make a Boat
+111. Natural Disaster Survival
+112. M.E.G. Endless Reality
+113. Notoriety
+114. Ninja Legends
+115. Naval Warfare
+116. No Cooldown Doomspire
+117. Octopus Game
+118. One Punch Training
+119. Prison Life
+120. Plants Vs Brainrots
+121. Phantom Forces
+122. PETS GO
+123. Pet Simulator 99
+124. PLS DONATE
+125. Piggy
+126. Pressure
+127. Prison Pump
+128. Rivals
+129. Randomizer
+130. Restaurant Tycoon 2
+131. Restaurant Tycoon 3
+132. Repair a Car
+133. Rebirth Champions: Ultimate 
+134. Ray's Mod
+135. RETAKE
+136. Rock Fruit
+137. Steal a Brainrot
+138. Spider
+139. Shrimp Game
+140. Survive and Kill the Killers in Area 51
+141. Scary Spelling
+142. Spelling Bee
+143. Supermarket Simulator
+144. Slap Battles
+145. Super Villain Tycoon
+146. Squid Game X
+147. starving artists
+148. Sisyphus Training
+149. Survive The Killer
+150. Strongman Simulator
+151. SCP Roleplay
+152. Skinwalkers
+153. Taxi Boss
+154. The Rake REMASTERED
+155. The Strongest Battlegrounds
+156. Throw stuff for money
+157. The Chosen One
+158. therapy
+159. Tower Of Hell
+160. The Wild West 4.0
+161. Unnamed Shooter
+162. Ultimate Mining Tycoon
+163. untitled tag game
+164. untitled drill game
+165. untitled boxing game
+166. Volleyball Legends
+167. Work at a Pizza Place
+168. War Tycoon
+169. Yeet A Friend
+170. Zombie Attack
+    ]],
+    Search = true,
+    NotifyLibrary = "Rayfield",
+    Notifications = true,
+    Altbutton = {
+        Name = "Join Discord",
+        Clipboard = "discord.gg/rTw5M8dRXN"
+    },
+    Notification = {
+        Title = "Changelog",
+        Content = "The changelog has been closed",
+        Duration = 3,
+        Image = 10723346871
+    },
+    AltbuttonNotification = {
+        Success = {
+            Title = "Copied!",
+            Content = "Link copied to clipboard",
+            Duration = 5,
+            Image = 10709798443
+        },
+        Failure = {
+            Title = "Error",
+            Content = "Clipboard not supported",
+            Duration = 5,
+            Image = 10709799124
+        }
+    }
+})
