@@ -238,9 +238,36 @@ e:Init{
 local f = e.
 FolderName
 local g, h = {
-    Config = e:GetModule("-378651226", 'Config'),
-    ReturnSpoofs = e:
-GetModule("2449941614", 'Return Spoofs'),
+    Config = [[
+local Config = {
+    Debug = false,
+    ThemeConfig = {
+        Colors = {}
+    },
+    MethodColors = {
+        fireserver = Color3.fromRGB(255, 100, 100),
+        invokeserver = Color3.fromRGB(100, 255, 100),
+        onclientevent = Color3.fromRGB(100, 100, 255),
+    },
+    SyntaxColors = {
+        background = Color3.fromRGB(30, 30, 30),
+        iden = Color3.fromRGB(204, 204, 204),
+        keyword = Color3.fromRGB(215, 174, 255),
+        string = Color3.fromRGB(196, 255, 193),
+        number = Color3.fromRGB(255, 125, 125),
+        comment = Color3.fromRGB(140, 140, 155),
+    },
+    VariableNames = {"a","b","c","d","e"},
+    BlackListedServices = {"CoreGui"},
+    NoReceiveHooking = false,
+    ForceKonstantDecompiler = false,
+    NoFunctionPatching = false,
+    ReplaceMetaCallFunc = false,
+    ForceUseCustomComm = false
+}
+return Config
+]]
+    ReturnSpoofs = [[return {}]],
     Configuration = a,
     Files = e,
     Process = [[
