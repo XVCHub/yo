@@ -3,8 +3,82 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesXVC/librarys/main/SearchAndChangeLogLibrary/Source"))()
 local dialog = Library:CreateChangelogDialog({
     Title = "XVC Hub - Changelog",
-    ChangelogText = "Version: 5.8\n+ added more universal scripts\n+ fixed scripts detections some games\n+ fixed scripts lagging the game\n[+] Added Games\n1. Emergency Hamburg\n2. Don't Wake the Brainrots!\n3. Restaurant Tycoon 2\n4. Restaurant Tycoon 3\n5. Break your Bones\n6. Plants Vs Brainrots\n7. Fish It!\n8. Be a Beggar\n9. Cut Trees\n10. Build Ur Base\n11. Repair a Car\n[+] Updated Games Scripts\n1. GEF\n2. Ultimate Mining Tycoon\n3. +1 Speed Prison Escape\n- i forgot\n[+] Added Features\n- Camera Settings: Blur & Resolution\n- Enable/Disable performance loop for more fps\n[-] Deleted Features\nnothing",
-    Search = true,
+    ChangelogText = [[
+[+] added more universal scripts also fixed moonsec scripts :3 #open-src                               
+[+] hubs,universelscripts,feanimation tabs has updated
+[+] fixed unbanvc, added unbanchat, consolecopybutton, freecam
+[+] added more misc in games
+
+[+] added new features:
+env settings
+Enable/Disable interface hidden notification
+
+[+] env settings:
+
+getgenv().blur = true, false (only for luna)
+getgenv().day = "morning" example: morning, afternoon, evening, night
+
+[+] added games:
+
+1. Flick
+2. RV Chaos
+3. Cars vs Trucks
+4. BedFight
+5. Protect The House From Monsters
+6. Prospecting!
+7. Deadly Delivery
+8. Survive Overnight in a Mega Store
+9. Violence District
+
+[-] deleted games:
+
+1. Babu's Wall Hop Difficulty Chart 2
+2. Bee Rich
+3. KAT X
+4. KAT
+
+[+] updated games
+
+1. Natural Disaster Survival
+2. Brookhaven RP
+3. Prison Life [rewrite]
+4. Funky Friday
+5. GO FISHING
+6. Chaos
+7. War Tycoon
+8. Fling Things and People
+9. Merge for SPEED
+10. Survive and Kill the Killers in Area 51
+11. Taxi Boss
+12. 3008
+13. Squid Game X
+14. Math Murder
+15. Flag Wars
+16. LUCKY BLOCKS Battlegrounds
+17. Build A Boat For Treasure
+18. Dead Rails
+19. Desert Detectors
+20. Spelling Bee [only game ids updated]
+21. BARRY'S PRISON RUN!
+22. PETS GO
+23. Piggy
+24. Grow a Garden
+25. Forsaken
+26. Color Game
+27. Pet Simulator 99
+28. Ultimate Mining Tycoon
+29. Brainrot Evolution
+30. Steal a Brainrot
+31. 99 Nights in the Forest
+32. Volleyball Legends
+33. Pressure
+34. Driving Empire
+35. Emergency Hamburg
+36. Plants Vs Brainrots
+37. Rivals
+moreeeee
+]],
+Search = true,
     NotifyLibrary = "Rayfield",
     Notifications = true,
     Altbutton = {
