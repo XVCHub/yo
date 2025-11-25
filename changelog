@@ -4,6 +4,8 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesX
 local dialog = Library:CreateChangelogDialog({
     Title = "XVC Hub - Changelog",
     ChangelogText = [[
+Version 6.0.0
+
 [+] added more universal scripts also fixed moonsec scripts :3 #open-src                               
 [+] hubs,universelscripts,feanimation tabs has updated
 [+] fixed unbanvc, added unbanchat, consolecopybutton, freecam
