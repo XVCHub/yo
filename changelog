@@ -4,23 +4,30 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesX
 local dialog = Library:CreateChangelogDialog({
     Title = "XVC Hub - Changelog",
     ChangelogText = [[
-Version 6.0.0
+Version: 6.0
+︎︎︎
 
-[+] added more universal scripts also fixed moonsec scripts :3 #open-src                               
-[+] hubs,universelscripts,feanimation tabs has updated
-[+] fixed unbanvc, added unbanchat, consolecopybutton, freecam
-[+] added more misc in games
++ added more universal scripts also fixed moonsec scripts :3 #open-src                               
++ hubs,universelscripts,feanimation tabs has updated
++ fixed unbanvc, added unbanchat, consolecopybutton, freecam
++ added more misc in games
+︎︎︎︎︎
+[+] added new features:︎︎︎
+︎︎︎
 
-[+] added new features:
 env settings
 Enable/Disable interface hidden notification
+︎︎︎
 
 [+] env settings:
+︎︎︎
 
 getgenv().blur = true, false (only for luna)
 getgenv().day = "morning" example: morning, afternoon, evening, night
+︎︎︎
 
 [+] added games:
+︎︎︎
 
 1. Flick
 2. RV Chaos
@@ -31,15 +38,19 @@ getgenv().day = "morning" example: morning, afternoon, evening, night
 7. Deadly Delivery
 8. Survive Overnight in a Mega Store
 9. Violence District
+︎︎︎
 
 [-] deleted games:
+︎︎︎
 
 1. Babu's Wall Hop Difficulty Chart 2
 2. Bee Rich
 3. KAT X
 4. KAT
+︎︎︎
 
 [+] updated games
+︎︎︎
 
 1. Natural Disaster Survival
 2. Brookhaven RP
