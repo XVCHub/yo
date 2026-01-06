@@ -1,419 +1,583 @@
-local Hook = {
-	OriginalNamecall = nil,
-	OriginalIndex = nil,
-	PreviousFunctions = {},
-	DefaultConfig = {
-		FunctionPatches = true
-	}
-}
-
 type table = {
-	[any]: any
+    [any]: any
 }
 
-type MetaFunc = (Instance, ...any) -> ...any
-type UnkFunc = (...any) -> ...any
+type RemoteData = {
+	Remote: Instance,
+    NoBacktrace: boolean?,
+	IsReceive: boolean?,
+	Args: table,
+    Id: string,
+	Method: string,
+    TransferType: string,
+	ValueReplacements: table,
+    ReturnValues: table,
+    OriginalFunc: (Instance, ...any) -> ...any
+}
+
+--// Module
+local Process = {
+    --// Remote classes
+    RemoteClassData = {
+        ["RemoteEvent"] = {
+            Send = {
+                "FireServer",
+                "fireServer",
+            },
+            Receive = {
+                "OnClientEvent",
+            }
+        },
+        ["RemoteFunction"] = {
+            IsRemoteFunction = true,
+            Send = {
+                "InvokeServer",
+                "invokeServer",
+            },
+            Receive = {
+                "OnClientInvoke",
+            }
+        },
+        ["UnreliableRemoteEvent"] = {
+            Send = {
+                "FireServer",
+                "fireServer",
+            },
+            Receive = {
+                "OnClientEvent",
+            }
+        },
+        ["BindableEvent"] = {
+            NoReciveHook = true,
+            Send = {
+                "Fire",
+            },
+            Receive = {
+                "Event",
+            }
+        },
+        ["BindableFunction"] = {
+            IsRemoteFunction = true,
+            NoReciveHook = true,
+            Send = {
+                "Invoke",
+            },
+            Receive = {
+                "OnInvoke",
+            }
+        }
+    },
+    RemoteOptions = {},
+    LoopingRemotes = {},
+    ConfigOverwrites = {
+        [{"sirhurt", "potassium", "wave"}] = {
+            ForceUseCustomComm = true
+        }
+    }
+}
 
 --// Modules
-local Modules
-local Process
-local Configuration
-local Config
+local Hook
 local Communication
+local ReturnSpoofs
+local Ui
+local Config
 
-local ExeENV = getfenv(1)
+--// Services
+local HttpService: HttpService
 
-function Hook:Init(Data)
-    Modules = Data.Modules
+--// Communication channel
+local Channel
+local WrappedChannel = false
 
-	Process = Modules.Process
-	Communication = Modules.Communication or Communication
-	Config = Modules.Config or Config
-	Configuration = Modules.Configuration or Configuration
-end
+local SigmaENV = getfenv(1)
 
---// The callback is expected to return a nil value sometimes which should be ingored
-local HookMiddle = newcclosure(function(OriginalFunc, Callback, AlwaysTable: boolean?, ...)
-	--// Invoke callback and check for a reponce otherwise ignored
-	local ReturnValues = Callback(...)
-	if ReturnValues then
-		--// Unpack
-		if not AlwaysTable then
-			return Process:Unpack(ReturnValues)
-		end
-
-		--// Return packed responce
-		return ReturnValues
-	end
-
-	--// Return packed responce
-	if AlwaysTable then
-		return {OriginalFunc(...)}
-	end
-
-	--// Unpacked
-	return OriginalFunc(...)
-end)
-
-local function Merge(Base: table, New: table)
+function Process:Merge(Base: table, New: table)
+    if not New then return end
 	for Key, Value in next, New do
 		Base[Key] = Value
 	end
 end
 
-function Hook:Index(Object: Instance, Key: string)
-	return Object[Key]
+function Process:Init(Data)
+    local Modules = Data.Modules
+    local Services = Data.Services
+
+    --// Services
+    HttpService = Services.HttpService
+
+    --// Modules
+    Config = Modules.Config
+    Ui = Modules.Ui
+    Hook = Modules.Hook
+    Communication = Modules.Communication
+    ReturnSpoofs = Modules.ReturnSpoofs
 end
 
-function Hook:PushConfig(Overwrites)
-    Merge(self, Overwrites)
+--// Communication
+function Process:SetChannel(NewChannel: BindableEvent, IsWrapped: boolean)
+    Channel = NewChannel
+    WrappedChannel = IsWrapped
 end
 
---// getrawmetatable
-function Hook:ReplaceMetaMethod(Object: Instance, Call: string, Callback: MetaFunc): MetaFunc
-	local Metatable = getrawmetatable(Object)
-	local OriginalFunc = clonefunction(Metatable[Call])
-	
-	--// Replace function
-	setreadonly(Metatable, false)
-	Metatable[Call] = newcclosure(function(...)
-		return HookMiddle(OriginalFunc, Callback, false, ...)
-	end)
-	setreadonly(Metatable, true)
+function Process:GetConfigOverwrites(Name: string)
+    local ConfigOverwrites = self.ConfigOverwrites
 
-	return OriginalFunc
+    for List, Overwrites in next, ConfigOverwrites do
+        if not table.find(List, Name) then continue end
+        return Overwrites
+    end
+    return
 end
 
---// hookfunction
-function Hook:HookFunction(Func: UnkFunc, Callback: UnkFunc)
-	local OriginalFunc
-	local WrappedCallback = newcclosure(Callback)
-	OriginalFunc = clonefunction(hookfunction(Func, function(...)
-		return HookMiddle(OriginalFunc, WrappedCallback, false, ...)
-	end))
-	return OriginalFunc
+function Process:CheckConfig(Config: table)
+    local Name = identifyexecutor():lower()
+
+    --// Force configuration overwrites for specific executors
+    local Overwrites = self:GetConfigOverwrites(Name)
+    if not Overwrites then return end
+
+    self:Merge(Config, Overwrites)
 end
 
---// hookmetamethod
-function Hook:HookMetaCall(Object: Instance, Call: string, Callback: MetaFunc): MetaFunc
-	local Metatable = getrawmetatable(Object)
-	local Unhooked
-	
-	Unhooked = self:HookFunction(Metatable[Call], function(...)
-		return HookMiddle(Unhooked, Callback, true, ...)
-	end)
-	return Unhooked
+function Process:CleanCError(Error: string): string
+    Error = Error:gsub(":%d+: ", "")
+    Error = Error:gsub(", got %a+", "")
+    Error = Error:gsub("invalid argument", "missing argument")
+    return Error
 end
 
-function Hook:HookMetaMethod(Object: Instance, Call: string, Callback: MetaFunc): MetaFunc
-	local Func = newcclosure(Callback)
-	
-	--// Getrawmetatable
-	if Config.ReplaceMetaCallFunc then
-		return self:ReplaceMetaMethod(Object, Call, Func)
+function Process:CountMatches(String: string, Match: string): number
+	local Count = 0
+	for _ in String:gmatch(Match) do
+		Count +=1 
 	end
-	
-	--// Hookmetamethod
-	return self:HookMetaCall(Object, Call, Func)
+
+	return Count
 end
 
---// This includes a few patches for executor functions that result in detection
---// This isn't bulletproof since some functions like hookfunction I can't patch
---// By the way, thanks for copying this guys! Super appreciate the copycat
-function Hook:PatchFunctions()
-	--// Check if this function is disabled in the configuration
-	if Config.NoFunctionPatching then return end
-
-	local Patches = {
-		--// Error detection patch
-		--// hookfunction may still be detected depending on the executor
-		[pcall] =  function(OldFunc, Func, ...)
-			local Responce = {OldFunc(Func, ...)}
-			local Success, Error = Responce[1], Responce[2]
-			local IsC = iscclosure(Func)
-
-			--// Patch c-closure error detection
-			if Success == false and IsC then
-				local NewError = Process:CleanCError(Error)
-				Responce[2] = NewError
-			end
-
-			--// Stack-overflow detection patch
-			if Success == false and not IsC and Error:find("C stack overflow") then
-				local Tracetable = Error:split(":")
-				local Caller, Line = Tracetable[1], Tracetable[2]
-				local Count = Process:CountMatches(Error, Caller)
-
-				if Count == 196 then
-					Communication:ConsolePrint(`C stack overflow patched, count was {Count}`)
-					Responce[2] = Error:gsub(`{Caller}:{Line}: `, Caller, 1)
-				end
-			end
-
-			return Responce
-		end,
-		[getfenv] = function(OldFunc, Level: number, ...)
-			Level = Level or 1
-
-			--// Prevent catpure of executor's env
-			if type(Level) == "number" then
-				Level += 2
-			end
-
-			local Responce = {OldFunc(Level, ...)}
-			local ENV = Responce[1]
-
-			--// __tostring ENV detection patch
-			if not checkcaller() and ENV == ExeENV then
-				Communication:ConsolePrint("ENV escape patched")
-				return OldFunc(999999, ...)
-			end
-
-			return Responce
-		end
-	}
-
-	--// Hook each function
-	for Func, CallBack in Patches do
-		local Wrapped = newcclosure(CallBack)
-		local OldFunc; OldFunc = self:HookFunction(Func, function(...)
-			return Wrapped(OldFunc, ...)
-		end)
-
-		--// Cache previous function
-		self.PreviousFunctions[Func] = OldFunc
-	end
+function Process:CheckValue(Value, Ignore: table?, Cache: table?)
+    local Type = typeof(Value)
+    Communication:WaitCheck()
+    
+    if Type == "table" then
+        Value = self:DeepCloneTable(Value, Ignore, Cache)
+    elseif Type == "Instance" then
+        Value = cloneref(Value)
+    end
+    
+    return Value
 end
 
-function Hook:GetOriginalFunc(Func)
-	return self.PreviousFunctions[Func] or Func
+function Process:DeepCloneTable(Table, Ignore: table?, Visited: table?): table
+    if typeof(Table) ~= "table" then return Table end
+    local Cache = Visited or {}
+
+    --// Check for cached
+    if Cache[Table] then
+        return Cache[Table]
+    end
+
+    local New = {}
+    Cache[Table] = New
+
+    for Key, Value in next, Table do
+        --// Check if the value is ignored
+        if Ignore and table.find(Ignore, Value) then continue end
+        
+        Key = self:CheckValue(Key, Ignore, Cache)
+        New[Key] = self:CheckValue(Value, Ignore, Cache)
+    end
+
+    --// Master clear
+    if not Visited then
+        table.clear(Cache)
+    end
+    
+    return New
 end
 
-function Hook:RunOnActors(Code: string, ChannelId: number)
-	if not getactors or not run_on_actor then return end
-	
-	local Actors = getactors()
-	if not Actors then return end
-	
-	for _, Actor in Actors do 
-		pcall(run_on_actor, Actor, Code, ChannelId)
-	end
+function Process:Unpack(Table: table)
+    if not Table then return Table end
+	local Length = table.maxn(Table)
+	return unpack(Table, 1, Length)
 end
 
-local function ProcessRemote(OriginalFunc, MetaMethod: string, self, Method: string, ...)
-	return Process:ProcessRemote({
-		Method = Method,
-		OriginalFunc = OriginalFunc,
-		MetaMethod = MetaMethod,
-		TransferType = "Send",
-		IsExploit = checkcaller()
-	}, self, ...)
+function Process:PushConfig(Overwrites)
+    self:Merge(self, Overwrites)
 end
 
-function Hook:HookRemoteTypeIndex(ClassName: string, FuncName: string)
-	local Remote = Instance.new(ClassName)
-	local Func = Remote[FuncName]
-	local OriginalFunc
-
-	--// Remotes will share the same functions
-	--// 	For example FireServer will be identical
-	--// Addionally, this is for __index calls.
-	--// 	A __namecall hook will not detect this
-	OriginalFunc = self:HookFunction(Func, function(self, ...)
-		--// Check if the Object is allowed 
-		if not Process:RemoteAllowed(self, "Send", FuncName) then return end
-
-		--// Process the remote data
-		return ProcessRemote(OriginalFunc, "__index", self, FuncName, ...)
-	end)
+function Process:FuncExists(Name: string)
+	return SigmaENV[Name]
 end
 
-function Hook:HookRemoteIndexes()
-	local RemoteClassData = Process.RemoteClassData
-	for ClassName, Data in RemoteClassData do
-		local FuncName = Data.Send[1]
-		self:HookRemoteTypeIndex(ClassName, FuncName)
-	end
+function Process:CheckExecutor(): boolean
+    local Blacklisted = {
+        "xeno",
+        "solara",
+        "jjsploit"
+    }
+
+    local Name = identifyexecutor():lower()
+    local IsBlacklisted = table.find(Blacklisted, Name)
+
+    --// Some executors have broken functionality
+    if IsBlacklisted then
+        Ui:ShowUnsupportedExecutor(Name)
+        return false
+    end
+
+    return true
 end
 
-function Hook:BeginHooks()
-	--// Hook Remote functions
-	self:HookRemoteIndexes()
+function Process:CheckFunctions(): boolean
+    local CoreFunctions = {
+        "hookmetamethod",
+        "hookfunction",
+        "getrawmetatable",
+        "setreadonly"
+    }
 
-	--// Namecall hook
-	local OriginalNameCall
-	OriginalNameCall = self:HookMetaMethod(game, "__namecall", function(self, ...)
-		local Method = getnamecallmethod()
-		return ProcessRemote(OriginalNameCall, "__namecall", self, Method, ...)
-	end)
+    --// Check if the functions exist in the ENV
+    for _, Name in CoreFunctions do
+        local Func = self:FuncExists(Name)
+        if Func then continue end
 
-	Merge(self, {
-		OriginalNamecall = OriginalNameCall,
-		--OriginalIndex = Oi
-	})
+        --// Function missing!
+        Ui:ShowUnsupported(Name)
+        return false
+    end
+
+    return true
 end
 
-function Hook:HookClientInvoke(Remote, Method, Callback)
-	local Success, Function = pcall(function()
-		return getcallbackvalue(Remote, Method)
-	end)
+function Process:CheckIsSupported(): boolean
+    --// Check if the executor is blacklisted
+    local ExecutorSupported = self:CheckExecutor()
+    if not ExecutorSupported then
+        return false
+    end
 
-	--// Some executors like Potassium will throw a error if the Callback value is nil
-	if not Success then return end
-	if not Function then return end
-	
-	--// Test hookfunction
-	local HookSuccess = pcall(function()
-		self:HookFunction(Function, Callback)
-	end)
-	if HookSuccess then return end
+    --// Check if the core functions exist
+    local FunctionsSupported = self:CheckFunctions()
+    if not FunctionsSupported then
+        return false
+    end
 
-	--// Replace callback function otherwise
-	Remote[Method] = function(...)
-		return HookMiddle(Function, Callback, false, ...)
-	end
+    return true
 end
 
-function Hook:MultiConnect(Remotes)
-	for _, Remote in next, Remotes do
-		self:ConnectClientRecive(Remote)
-	end
+function Process:GetClassData(Remote: Instance): table?
+    local RemoteClassData = self.RemoteClassData
+    local ClassName = Hook:Index(Remote, "ClassName")
+
+    return RemoteClassData[ClassName]
 end
 
-function Hook:ConnectClientRecive(Remote)
-	--// Check if the Remote class is allowed for receiving
-	local Allowed = Process:RemoteAllowed(Remote, "Receive")
+function Process:IsProtectedRemote(Remote: Instance): boolean
+    local IsDebug = Remote == Communication.DebugIdRemote
+    local IsChannel = Remote == (WrappedChannel and Channel.Channel or Channel)
+
+    return IsDebug or IsChannel
+end
+
+function Process:RemoteAllowed(Remote: Instance, TransferType: string, Method: string?): boolean?
+    if typeof(Remote) ~= 'Instance' then return end
+    
+    --// Check if the Remote is protected
+    if self:IsProtectedRemote(Remote) then return end
+
+    --// Fetch class table
+	local ClassData = self:GetClassData(Remote)
+	if not ClassData then return end
+
+    --// Check if the transfer type has data
+	local Allowed = ClassData[TransferType]
 	if not Allowed then return end
 
-	--// Check if the Object has Remote class data
-    local ClassData = Process:GetClassData(Remote)
-    local IsRemoteFunction = ClassData.IsRemoteFunction
-	local NoReciveHook = ClassData.NoReciveHook
-    local Method = ClassData.Receive[1]
-
-	--// Check if the Recive should be hooked
-	if NoReciveHook then return end
-
-	--// New callback function
-	local function Callback(...)
-        return Process:ProcessRemote({
-            Method = Method,
-            IsReceive = true,
-            MetaMethod = "Connect",
-			IsExploit = checkcaller()
-        }, Remote, ...)
+    --// Check if the method is allowed
+	if Method then
+		return table.find(Allowed, Method) ~= nil
 	end
 
-	--// Connect remote
-	if not IsRemoteFunction then
-   		Remote[Method]:Connect(Callback)
-	else -- Remote functions
-		self:HookClientInvoke(Remote, Method, Callback)
-	end
+	return true
 end
 
-function Hook:BeginService(Libraries, ExtraData, ChannelId, ...)
-	--// Librareis
-	local ReturnSpoofs = Libraries.ReturnSpoofs
-	local ProcessLib = Libraries.Process
-	local Communication = Libraries.Communication
-	local Generation = Libraries.Generation
-	local Config = Libraries.Config
+function Process:SetExtraData(Data: table)
+    if not Data then return end
+    self.ExtraData = Data
+end
 
-	--// Check for configuration overwrites
-	ProcessLib:CheckConfig(Config)
+function Process:GetRemoteSpoof(Remote: Instance, Method: string, ...): table?
+    local Spoof = ReturnSpoofs[Remote]
 
-	--// Init data
-	local InitData = {
-		Modules = {
-			ReturnSpoofs = ReturnSpoofs,
-			Generation = Generation,
-			Communication = Communication,
-			Process = ProcessLib,
-			Config = Config,
-			Hook = self
-		},
-		Services = setmetatable({}, {
-			__index = function(self, Name: string): Instance
-				local Service = game:GetService(Name)
-				return cloneref(Service)
-			end,
-		})
+    if not Spoof then return end
+    if Spoof.Method ~= Method then return end
+
+    local ReturnValues = Spoof.Return
+
+    --// Call the ReturnValues function type
+    if typeof(ReturnValues) == "function" then
+        ReturnValues = ReturnValues(...)
+    end
+
+	return ReturnValues
+end
+
+function Process:SetNewReturnSpoofs(NewReturnSpoofs: table)
+    ReturnSpoofs = NewReturnSpoofs
+end
+
+function Process:FindCallingLClosure(Offset: number)
+    local Getfenv = Hook:GetOriginalFunc(getfenv)
+    Offset += 1
+
+    while true do
+        Offset += 1
+
+        --// Check if the stack level is valid
+        local IsValid = debug.info(Offset, "l") ~= -1
+        if not IsValid then continue end
+
+        --// Check if the function is valid
+        local Function = debug.info(Offset, "f")
+        if not Function then return end
+        if Getfenv(Function) == SigmaENV then continue end
+
+        return Function
+    end
+end
+
+function Process:Decompile(Script: LocalScript | ModuleScript): string
+    local KonstantAPI = "http://api.plusgiant5.com/konstant/decompile"
+    local ForceKonstant = Config.ForceKonstantDecompiler
+
+    --// Use built-in decompiler if the executor supports it
+    if decompile and not ForceKonstant then 
+        return decompile(Script)
+    end
+
+    --// getscriptbytecode
+    local Success, Bytecode = pcall(getscriptbytecode, Script)
+    if not Success then
+        local Error = `--Failed to get script bytecode, error:\n`
+        Error ..= `\n--[[\n{Bytecode}\n]]`
+        return Error, true
+    end
+    
+    --// Send POST request to the API
+    local Responce = request({
+        Url = KonstantAPI,
+        Body = Bytecode,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "text/plain"
+        },
+    })
+
+    --// Error check
+    if Responce.StatusCode ~= 200 then
+        local Error = `--[KONSTANT] Error occured while requesting the API, error:\n`
+        Error ..= `\n--[[\n{Responce.Body}\n]]`
+        return Error, true
+    end
+
+    return Responce.Body
+end
+
+function Process:GetScriptFromFunc(Func: (...any) -> ...any)
+    if not Func then return end
+
+    local Success, ENV = pcall(getfenv, Func)
+    if not Success then return end
+    
+    --// Blacklist sigma spy
+    if self:IsSigmaSpyENV(ENV) then return end
+
+    return rawget(ENV, "script")
+end
+
+function Process:ConnectionIsValid(Connection: table): boolean
+    local ValueReplacements = {
+		["Script"] = function(Connection: table): Script?
+			local Function = Connection.Function
+			if not Function then return end
+
+			return self:GetScriptFromFunc(Function)
+		end
 	}
 
-	--// Init libraries
-	Communication:Init(InitData)
-	ProcessLib:Init(InitData)
+    --// Check if these properties are valid
+    local ToCheck = {
+        "Script"
+    }
+    for _, Property in ToCheck do
+        local Replacement = ValueReplacements[Property]
+        local Value
 
-	--// Communication configuration
-	local Channel, IsWrapped = Communication:GetCommChannel(ChannelId)
-	Communication:SetChannel(Channel)
-	Communication:AddTypeCallbacks({
-		["RemoteData"] = function(Id: string, RemoteData)
-			ProcessLib:SetRemoteData(Id, RemoteData)
-		end,
-		["AllRemoteData"] = function(Key: string, Value)
-			ProcessLib:SetAllRemoteData(Key, Value)
-		end,
-		["UpdateSpoofs"] = function(Content: string)
-			local Spoofs = loadstring(Content)()
-			ProcessLib:SetNewReturnSpoofs(Spoofs)
-		end,
-		["BeginHooks"] = function(Config)
-			if Config.PatchFunctions then
-				self:PatchFunctions()
-			end
-			self:BeginHooks()
-			Communication:ConsolePrint("Hooks loaded")
-		end
-	})
+        --// Check if there's a function for a property
+        if Replacement then
+            Value = Replacement(Connection)
+        end
+
+        --// Check if the property has a value
+        if Value == nil then 
+            return false 
+        end
+    end
+
+    return true
+end
+
+function Process:FilterConnections(Signal: RBXScriptSignal): table
+    local Processed = {}
+
+    --// Filter each connection
+    for _, Connection in getconnections(Signal) do
+        if not self:ConnectionIsValid(Connection) then continue end
+        table.insert(Processed, Connection)
+    end
+
+    return Processed
+end
+
+function Process:IsSigmaSpyENV(Env: table): boolean
+    return Env == SigmaENV
+end
+
+function Process:GetRemoteData(Id: string)
+    local RemoteOptions = self.RemoteOptions
+
+    --// Check for existing remote data
+	local Existing = RemoteOptions[Id]
+	if Existing then return Existing end
 	
-	--// Process configuration
-	ProcessLib:SetChannel(Channel, IsWrapped)
-	ProcessLib:SetExtraData(ExtraData)
+    --// Base remote data
+	local Data = {
+		Excluded = false,
+		Blocked = false
+	}
 
-	--// Hook configuration
-	self:Init(InitData)
+	RemoteOptions[Id] = Data
+	return Data
+end
 
-	if ExtraData and ExtraData.IsActor then
-		Communication:ConsolePrint("Actor connected!")
+function Process:CallDiscordRPC(Body: table)
+    request({
+        Url = "http://127.0.0.1:6463/rpc?v=1",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json",
+            ["Origin"] = "https://discord.com/"
+        },
+        Body = HttpService:JSONEncode(Body)
+    })
+end
+
+function Process:PromptDiscordInvite(InviteCode: string)
+    self:CallDiscordRPC({
+        cmd = "INVITE_BROWSER",
+        nonce = HttpService:GenerateGUID(false),
+        args = {
+            code = InviteCode
+        }
+    })
+end
+
+local ProcessCallback = newcclosure(function(Data: RemoteData, Remote, ...): table?
+    --// Unpack Data
+    local OriginalFunc = Data.OriginalFunc
+    local Id = Data.Id
+    local Method = Data.Method
+
+    --// Check if the Remote is Blocked
+    local RemoteData = Process:GetRemoteData(Id)
+    if RemoteData.Blocked then return {} end
+
+    --// Check for a spoof
+    local Spoof = Process:GetRemoteSpoof(Remote, Method, OriginalFunc, ...)
+    if Spoof then return Spoof end
+
+    --// Check if the orignal function was passed
+    if not OriginalFunc then return end
+
+    --// Invoke orignal function
+    return {
+        OriginalFunc(Remote, ...)
+    }
+end)
+
+function Process:ProcessRemote(Data: RemoteData, Remote, ...): table?
+    --// Unpack Data
+	local Method = Data.Method
+    local TransferType = Data.TransferType
+    local IsReceive = Data.IsReceive
+
+	--// Check if the transfertype method is allowed
+	if TransferType and not self:RemoteAllowed(Remote, TransferType, Method) then return end
+
+    --// Fetch details
+    local Id = Communication:GetDebugId(Remote)
+    local ClassData = self:GetClassData(Remote)
+    local Timestamp = tick()
+
+    local CallingFunction
+    local SourceScript
+
+    --// Add extra data into the log if needed
+    local ExtraData = self.ExtraData
+    if ExtraData then
+        self:Merge(Data, ExtraData)
+    end
+
+    --// Get caller information
+    if not IsReceive then
+        CallingFunction = self:FindCallingLClosure(6)
+        SourceScript = CallingFunction and self:GetScriptFromFunc(CallingFunction) or nil
+    end
+
+    --// Add to queue
+    self:Merge(Data, {
+        Remote = cloneref(Remote),
+		CallingScript = getcallingscript(),
+        CallingFunction = CallingFunction,
+        SourceScript = SourceScript,
+        Id = Id,
+		ClassData = ClassData,
+        Timestamp = Timestamp,
+        Args = {...}
+    })
+
+    --// Invoke the Remote and log return values
+    local ReturnValues = ProcessCallback(Data, Remote, ...)
+    Data.ReturnValues = ReturnValues
+
+    --// Queue log
+    Communication:QueueLog(Data)
+
+    return ReturnValues
+end
+
+function Process:SetAllRemoteData(Key: string, Value)
+    local RemoteOptions = self.RemoteOptions
+	for RemoteID, Data in next, RemoteOptions do
+		Data[Key] = Value
 	end
 end
 
-function Hook:LoadMetaHooks(ActorCode: string, ChannelId: number)
-	--// Hook actors
-	if not Configuration.NoActors then
-		self:RunOnActors(ActorCode, ChannelId)
-	end
-
-	--// Hook current thread
-	self:BeginService(Modules, nil, ChannelId) 
+--// The communication creates a different table address
+--// Recived tables will not be the same
+function Process:SetRemoteData(Id: string, RemoteData: table)
+    local RemoteOptions = self.RemoteOptions
+    RemoteOptions[Id] = RemoteData
 end
 
-function Hook:LoadReceiveHooks()
-	local NoReceiveHooking = Config.NoReceiveHooking
-	local BlackListedServices = Config.BlackListedServices
-
-	if NoReceiveHooking then return end
-
-	--// Remote added
-	game.DescendantAdded:Connect(function(Remote) -- TODO
-		self:ConnectClientRecive(Remote)
-	end)
-
-	--// Collect remotes with nil parents
-	self:MultiConnect(getnilinstances())
-
-	--// Search for remotes
-	for _, Service in next, game:GetChildren() do
-		if table.find(BlackListedServices, Service.ClassName) then continue end
-		self:MultiConnect(Service:GetDescendants())
-	end
+function Process:UpdateRemoteData(Id: string, RemoteData: table)
+    Communication:Communicate("RemoteData", Id, RemoteData)
 end
 
-function Hook:LoadHooks(ActorCode: string, ChannelId: number)
-	self:LoadMetaHooks(ActorCode, ChannelId)
-	self:LoadReceiveHooks()
+function Process:UpdateAllRemoteData(Key: string, Value)
+    Communication:Communicate("AllRemoteData", Key, Value)
 end
 
-return Hook
+return Process
