@@ -137,16 +137,7 @@ function Ui:TurnSeasonal(Text: string): string
 end
 
 function Ui:LoadFont()
-	local FontFile = self.FontJsonFile
-
-	--// Get FontFace AssetId
-	local AssetId = Files:LoadCustomasset(FontFile)
-	if not AssetId then return end
-
-	--// Create custom FontFace
-	local NewFont = Font.new(AssetId)
-	TextFont = NewFont
-	FontSuccess = true
+	return
 end
 
 function Ui:SetFontFile(FontFile: string)
