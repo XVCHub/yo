@@ -80,10 +80,6 @@ function Generation:Init(Data: table)
 	Config = Modules.Config
 	Hook = Modules.Hook
 	Flags = Modules.Flags
-	
-	--// Import parser
-	local ParserUrl = Configuration.ParserUrl
-	self:LoadParser(ParserUrl)
 end
 
 function Generation:MakePrintable(String: string): string
