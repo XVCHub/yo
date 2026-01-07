@@ -134,10 +134,6 @@ function Ui:TurnSeasonal(Text: string): string
     return Base:format(Text)
 end
 
-function Ui:LoadFont()
-	return
-end
-
 function Ui:SetFontFile(FontFile: string)
 	self.FontJsonFile = FontFile
 end
