@@ -105,8 +105,6 @@ function Ui:Init(Data)
 	Files = Modules.Files
 
 	--// ReGui
-	self:LoadFont()
-	self:LoadReGui()
 	self:CheckScale()
 end
 
