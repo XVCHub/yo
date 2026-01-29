@@ -4,19 +4,23 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesX
 local dialog = Library:CreateChangelogDialog({
     Title = "XVC Hub - Changelog",
     ChangelogText = [[
-Version: 6.0
+Version: 6.2
 ︎︎︎
 
-+ added more universal scripts also fixed moonsec scripts :3 #open-src                               
-+ hubs,universelscripts,feanimation tabs has updated
-+ fixed unbanvc, added unbanchat, consolecopybutton, freecam
++ added more universal scripts 
++ cracked some scripts (key sys crack)
++ hubs,universelscripts,feanimation tabs again updated
++ universal updated added more misc
++ fixed game ids forsaken,etc
 + added more misc in games
 ︎︎︎︎︎
 [+] added new features:︎︎︎
 ︎︎︎
-
-env settings
-Enable/Disable interface hidden notification
++ anti afk,desync
+︎︎︎
+[-] deleted features:︎︎︎
+︎︎︎
+- deleted Performance Monitor in universal because useless
 ︎︎︎
 
 [+] env settings:
@@ -29,67 +33,47 @@ getgenv().day = "morning" example: morning, afternoon, evening, night
 [+] added games:
 ︎︎︎
 
-1. Flick
-2. RV Chaos
-3. Cars vs Trucks
-4. BedFight
-5. Protect The House From Monsters
-6. Prospecting!
-7. Deadly Delivery
-8. Survive Overnight in a Mega Store
-9. Violence District
-︎︎︎
+1. Draw me
+2. Rob it
+3. Bee Swarm Simulator
+4. Escape Tsunami For Brainrots!
+5. Break a Lucky Block
+6. Tsunami Escape For Lucky Blocks 
+7. Escape Waves For Lucky Blocks
+8. Escape Disasters for Memes
+9. Dig to Escape
+10. Tsunami Game
+11. counterfeit tycoon
+12. The Forge
+13. 24 Hours Overnight
+14. Tap Simulator
+15. Bake or Die
+16. One Shot
+17. Epic Minigames
+18. Dandy's World
+19. Escape Logs for Brainrots
+20. Blind Shot
+21. Creature CHAOS︎︎︎
 
 [-] deleted games:
 ︎︎︎
 
-1. Babu's Wall Hop Difficulty Chart 2
-2. Bee Rich
-3. KAT X
-4. KAT
+1. Guess the Drawings
+2. Anime Card Master
+3. Lootify
+4. Horse Race
+5. Brainrot IQ Test
+6. Ice Tycoon
+7. Scary Spelling
+8. Jetpack Training
+9. untitled drill game
+10. Dead Rivers
+11. Bridge Duel
 ︎︎︎
 
-[+] updated games
+[?] updated games
 ︎︎︎
-
-1. Natural Disaster Survival
-2. Brookhaven RP
-3. Prison Life [rewrite]
-4. Funky Friday
-5. GO FISHING
-6. Chaos
-7. War Tycoon
-8. Fling Things and People
-9. Merge for SPEED
-10. Survive and Kill the Killers in Area 51
-11. Taxi Boss
-12. 3008
-13. Squid Game X
-14. Math Murder
-15. Flag Wars
-16. LUCKY BLOCKS Battlegrounds
-17. Build A Boat For Treasure
-18. Dead Rails
-19. Desert Detectors
-20. Spelling Bee [only game ids updated]
-21. BARRY'S PRISON RUN!
-22. PETS GO
-23. Piggy
-24. Grow a Garden
-25. Forsaken
-26. Color Game
-27. Pet Simulator 99
-28. Ultimate Mining Tycoon
-29. Brainrot Evolution
-30. Steal a Brainrot
-31. 99 Nights in the Forest
-32. Volleyball Legends
-33. Pressure
-34. Driving Empire
-35. Emergency Hamburg
-36. Plants Vs Brainrots
-37. Rivals
-moreeeee
+idk but i guess thats 50–30
 ]],
 Search = true,
     NotifyLibrary = "Rayfield",
