@@ -2,20 +2,20 @@
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesXVC/librarys/main/SearchAndChangeLogLibrary/Source"))()
 local dialog = Library:CreateChangelogDialog({
-    Title = "Supported Games - 185",
+    Title = "Supported Games - 186",
     ChangelogText = [[
 1. 3008
-2. 100 players Maze
-3. 100 Player Slippery Stairs
-4. 99 Nights in the Forest
-5. +1 Speed Prison Escape
-6. 24 Hours in Elevator
-7. 24 Hours Overnight
-8. +1 Speed Maze
-9. Arsenal
-10. A dusty trip
-11. Arise Crossover
-12. Asylum Life
+2. 100 Player Slippery Stairs
+3. 99 Nights in the Forest
+4. +1 Speed Prison Escape
+5. 24 Hours in Elevator
+6. 24 Hours Overnight
+7. +1 Speed Maze
+8. Arsenal
+9. A dusty trip
+10. Arise Crossover
+11. Asylum Life
+12. AI Test
 13. Brookhaven RP
 14. Blade Ball
 15. Break In
@@ -26,56 +26,56 @@ local dialog = Library:CreateChangelogDialog({
 20. BedWars
 21. Break your Bones
 22. Basketball Legends
-23. Breeding ranch
+23. Bridger Western
 24. Brainrot Evolution
 25. BIG Paintball 2
 26. Baddies
-27. Be a Beggar
+27. Bite By Night
 28. Be NPC Or Die
-29. BedFight
-30. Build A Boat For Treasure
-31. Bubble Gum Simulator INFINITY
-32. BARRY'S PRISON RUN
-33. Become a Plane and Fly
-34. Bake or Die
-35. Blind Shot
-36. Broken Bones IV - Ragdoll Sim
-37. Break a Lucky Block
-38. Build An Island
-39. Build Ur Base
-40. Blood Debt
-41. Bee Swarm Simulator
-42. Criminality
-43. counterfeit tycoon
-44. Combat Warriors
-45. Counter Blox
-46. Chaos
-47. Cars vs Trucks
-48. Cut Trees
-49. Color Game
-50. Climb and Jump Tower
-51. Creature CHAOS
-52. Dead Rails
-53. DIG
-54. Dig to Escape
-55. Don't Wake the Brainrots!
-56. Death Penalty
-57. Driving Empire
-58. DOORS
-59. Draw me
-60. Dandy's World
-61. Dress To Impress
-62. Deadly Delivery
-63. Da Hood
-64. Dig to Earth's CORE
-65. Dig the Backyard
-66. Desert Detectors
-67. Drill Digging Simulator
-68. Evade
-69. Epic Minigames
-70. Escape Tsunami For Brainrots!
-71. Escape Waves For Lucky Blocks
-72. Escape Disasters for Memes
+29. Bridge Duel
+30. BedFight
+31. Bizarre Lineage
+32. Build A Boat For Treasure
+33. Bubble Gum Simulator INFINITY
+34. BARRY'S PRISON RUN
+35. Become a Plane and Fly
+36. Bake or Die
+37. Blind Shot
+38. Broken Bones IV - Ragdoll Sim
+39. Break a Lucky Block
+40. Build An Island
+41. Build Ur Base
+42. Blood Debt
+43. Bee Swarm Simulator
+44. Criminality
+45. counterfeit tycoon
+46. Combat Warriors
+47. Counter Blox
+48. Chaos
+49. Catch and Cook
+50. Cars vs Trucks
+51. Cut Trees
+52. Color Game
+53. Climb and Jump Tower
+54. Creature CHAOS
+55. Dead Rails
+56. Dig to Escape
+57. Death Penalty
+58. Driving Empire
+59. DOORS
+60. Draw me
+61. Dandy's World
+62. Dress To Impress
+63. Deadly Delivery
+64. Da Hood
+65. Dig to Earth's CORE
+66. Dig the Backyard
+67. Desert Detectors
+68. Drill Digging Simulator
+69. Evade
+70. Epic Minigames
+71. Escape Tsunami For Brainrots!
+72. Escape Waves For Lucky Blocks
 73. Escape Logs for Brainrots
 74. Emergency Hamburg
 75. Eat Pizza to Grow GIGACHAD
@@ -86,46 +86,46 @@ local dialog = Library:CreateChangelogDialog({
 80. Forsaken
 81. Fling Things and People
 82. Flag Wars
-83. Fish Training
-84. Funky Friday
-85. Field Trip Z
-86. Flee the Facility
-87. GEF
-88. Grow Crystals
-89. Grow a Garden
-90. Gunfight Arena
-91. Gun Grounds FFA
-92. Gang up on people simulator
-93. Gym Track Race
-94. GO FISHING
-95. HyperShot
-96. Hunty Zombie
-97. Horrific Housing
-98. Ink Game
-99. IQ Test
-100. Insane Elevator Testing
-101. Jail Break
-102. Lumber Tycoon 2
-103. Level Below
-104. Legends Of Speed
-105. LUCKY BLOCKS Battlegrounds
-106. Murder Mystery 2
-107. Muscle Legends
-108. Merge Tower Defense
-109. Meme Sea
-110. MIC UP
-111. Murderers VS Sheriffs Duels
-112. Math Murder
-113. Merge for SPEED
-114. Musical Chairs
-115. My Singing Brainrot
-116. Make a Boat
-117. Natural Disaster Survival
-118. M.E.G. Endless Reality
-119. Notoriety
-120. Ninja Legends
-121. Naval Warfare
-122. No Cooldown Doomspire
+83. Funky Friday
+84. Field Trip Z
+85. Flee the Facility
+86. GEF
+87. Grow Crystals
+88. Grow a Garden
+89. Gunfight Arena
+90. Gun Grounds FFA
+91. Gang up on people simulator
+92. Gym Track Race
+93. GO FISHING
+94. HyperShot
+95. Hunty Zombie
+96. Horrific Housing
+97. Ink Game
+98. IQ Test
+99. Insane Elevator Testing
+100. Jail Break
+101. Knockout
+102. Kick a Lucky Block
+103. Lumber Tycoon 2
+104. Level Below
+105. Legends Of Speed
+106. LUCKY BLOCKS Battlegrounds
+107. Murder Mystery 2
+108. Muscle Legends
+109. Merge Tower Defense
+110. Meme Sea
+111. MIC UP
+112. Murderers VS Sheriffs Duels
+113. Math Murder
+114. Merge for SPEED
+115. Musical Chairs
+116. My Singing Brainrot
+117. Make a Boat
+118. Natural Disaster Survival
+119. M.E.G. Endless Reality
+120. Notoriety
+121. Ninja Legends
+122. Naval Warfare
 123. Octopus Game
 124. One Shot
 125. One Punch Training
@@ -149,33 +149,33 @@ local dialog = Library:CreateChangelogDialog({
 143. Repair a Car
 144. Rebirth Champions: Ultimate
 145. Ray's Mod
-146. RETAKE
-147. Rock Fruit
-148. Steal a Brainrot
-149. Spider
-150. Shrimp Game
-151. Survive and Kill the Killers in Area 51
-152. Spelling Bee
-153. Supermarket Simulator
+146. Rock Fruit
+147. Steal a Brainrot
+148. Spider
+149. Shrimp Game
+150. Survive and Kill the Killers in Area 51
+151. Spelling Bee
+152. Supermarket Simulator
+153. Survive the Apocalypse
 154. Slap Battles
-155. Super Villain Tycoon
-156. Squid Game X
+155. Squid Game X
+156. Swarm Survival
 157. starving artists
-158. Sisyphus Training
-159. Survive The Killer
-160. Strongman Simulator
+158. Survive The Killer
+159. Strongman Simulator
+160. Survival Disaster Natural
 161. Survive Overnight in a Mega Store
 162. SCP Roleplay
-163. Skinwalkers
-164. Taxi Boss
-165. The Rake REMASTERED
-166. The Strongest Battlegrounds
-167. Throw stuff for money
+163. Space Sailors
+164. Skinwalkers
+165. Taxi Boss
+166. The Rake REMASTERED
+167. The Strongest Battlegrounds
 168. The Chosen One
 169. The Forge
 170. Tap Simulator
 171. therapy
-172. Tsunami Escape For Lucky Blocks
+172. The Button
 173. Tsunami Game
 174. Tower Of Hell
 175. The Wild West
@@ -189,6 +189,7 @@ local dialog = Library:CreateChangelogDialog({
 183. War Tycoon
 184. Yeet A Friend
 185. Zombie Attack
+186. ZOO or OOF
     ]],
     Search = true,
     NotifyLibrary = "Luna",
