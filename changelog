@@ -4,76 +4,57 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EnesX
 local dialog = Library:CreateChangelogDialog({
     Title = "XVC Hub - Changelog",
     ChangelogText = [[
-Version: 6.2
+Version: 6.5
 ︎︎︎
-
-+ added more universal scripts 
-+ cracked some scripts (key sys crack)
-+ hubs,universelscripts,feanimation tabs again updated
-+ universal updated added more misc
-+ fixed game ids forsaken,etc
-+ added more misc in games
-︎︎︎︎︎
++ added 3 universal scripts
++ now speed hub and talentless cracks working on every executor i guess
++ ui bugs fixed
++ now using game.gameid no placeid
++ added custom sky in universaltab
++ added search bar in universalscripts
++ more animations ^_^
+︎︎︎︎︎+ more better etc etc etc...
+︎︎︎︎︎︎
 [+] added new features:︎︎︎
+︎︎︎︎︎︎
++ custom sky , getgenv() thing
 ︎︎︎
-+ anti afk,desync
-︎︎︎
-[-] deleted features:︎︎︎
-︎︎︎
-- deleted Performance Monitor in universal because useless
-︎︎︎
-
-[+] env settings:
-︎︎︎
-
-getgenv().blur = true, false (only for luna)
-getgenv().day = "morning" example: morning, afternoon, evening, night
-︎︎︎
-
 [+] added games:
 ︎︎︎
-
-1. Draw me
-2. Rob it
-3. Bee Swarm Simulator
-4. Escape Tsunami For Brainrots!
-5. Break a Lucky Block
-6. Tsunami Escape For Lucky Blocks 
-7. Escape Waves For Lucky Blocks
-8. Escape Disasters for Memes
-9. Dig to Escape
-10. Tsunami Game
-11. counterfeit tycoon
-12. The Forge
-13. 24 Hours Overnight
-14. Tap Simulator
-15. Bake or Die
-16. One Shot
-17. Epic Minigames
-18. Dandy's World
-19. Escape Logs for Brainrots
-20. Blind Shot
-21. Creature CHAOS︎︎︎
-
+1. Bite By Night
+2. Bridge Duel
+3. Survive the Apocalypse
+4. The Button
+5. Knockout
+6. Bizarre Lineage
+7. Swarm Survival
+8. AI Test
+9. Catch and Cook
+10. ZOO or OOF
+11. Space Sailors
+12. Kick a Lucky Block
+13. Survival Disaster Natural
+14. Bridger Western
+︎︎︎
 [-] deleted games:
-︎︎︎
 
-1. Guess the Drawings
-2. Anime Card Master
-3. Lootify
-4. Horse Race
-5. Brainrot IQ Test
-6. Ice Tycoon
-7. Scary Spelling
-8. Jetpack Training
-9. untitled drill game
-10. Dead Rivers
-11. Bridge Duel
-︎︎︎
-
+1. 100 Players Impossible Maze
+2. No Cooldown Doomspire
+3. Tsunami Escape for Lucky Blocks
+4. Fish Training
+5. No Cooldown Doomspire
+6. Escape Disasters for Memes
+7. Super Villain Tycoon
+8. Breeding ranch
+9. Sisyphus Training
+10. DIG
+11. Don't Wake the Brainrots!
+12. Be a Beggar
+13. Throw stuff for money
+︎︎︎︎︎︎
 [?] updated games
-︎︎︎
-idk but i guess thats 50–30
+︎︎︎︎︎︎
+idk
 ]],
 Search = true,
     NotifyLibrary = "Rayfield",
